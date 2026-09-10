@@ -1,4 +1,3 @@
-
 /*EXEC silver.load_silver;*/
 CREATE OR ALTER PROCEDURE silver.load_silver AS
 BEGIN
@@ -134,23 +133,26 @@ BEGIN
 		PRINT '-------------------------------------------'
 
 		SET @start_time = GETDATE();
-		TRUNCATE TABLE silver.erp_cust_az12;
-		INSERT INTO silver.erp_cust_az12(
-			cid,
-			bdate,
-			gen
-		)
-		SELECT 
-		SUBSTRING(cid , 4 , LEN(CID)) AS  cid,
-		CASE 
-		WHEN bdate > GETDATE() THEN NULL
-		ELSE bdate
-		END AS bdate,
-		CASE WHEN gen = 'M' or gen = 'Male' THEN 'Male'
-			 WHEN gen = 'F' or gen = 'Female' THEN 'Female'
-			 ELSE 'n/a'
-		END AS gen
-		FROM bronze.erp_cust_az12;
+		 TRUNCATE TABLE silver.erp_cust_az12;
+			INSERT INTO silver.erp_cust_az12(
+				cid,
+				bdate,
+				gen
+			)
+
+			SELECT 
+			CASE WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid , 4 , LEN(CID)) 
+				 ELSE cid
+			END AS  cid,
+			CASE 
+			WHEN bdate > GETDATE() THEN NULL
+			ELSE bdate
+			END AS bdate,
+			CASE WHEN gen = 'M' or gen = 'Male' THEN 'Male'
+				 WHEN gen = 'F' or gen = 'Female' THEN 'Female'
+				 ELSE 'n/a'
+			END AS gen
+			FROM bronze.erp_cust_az12;
 		SET @end_time = GETDATE();
 		PRINT ' >> LOAD DURATION : ' + CAST(DATEDIFF(second , @start_time , @end_time) AS NVARCHAR) + ' SECONDS. '
 		PRINT '----------------------------------------------------'
