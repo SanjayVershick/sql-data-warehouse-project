@@ -148,24 +148,6 @@ SQL queries can then be used to analyze metrics and generate business insights.
 
 ---
 
-
-```text
-CSV Files
-    │
-    ▼
-Silver Data
-    │
-    ▼
-Data Warehouse
-    │
-    ▼
-Gold Layer
-    │
-    ▼
-Analytics
-```
----
-
 ## 🔍 Data Quality Checks
 
 Several data quality checks are applied throughout the pipeline.
